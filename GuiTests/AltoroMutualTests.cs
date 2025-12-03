@@ -19,7 +19,10 @@ namespace Structura.GuiTests
         [SetUp]
         public void SetupTest()
         {
-            _driver = new DriverFactory().Create();
+            var enableHealing = ConfigurationHelper.Get<bool>("EnableHealenium");
+            _driver = enableHealing 
+                ? new DriverFactory().CreateWithHealing() 
+                : new DriverFactory().Create();
             _baseUrl = ConfigurationHelper.Get<string>("TargetUrl");
         }
 

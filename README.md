@@ -1,7 +1,7 @@
-SeleniumExample - Using Selenium with C#.NET - now updated for 2025 featuring .NET 10 and Selenium 4
+Selenium Example - Using Selenium with C#.NET to test [newbalance.com](https://www.newbalance.com/) with self-healing selectors 
 ===============
 
-This solution demonstrates automated testing web pages with Selenium and C#.NET. It can also be used as a template for new Selenium test projects.
+Automated testing of New Balance web pages with Selenium and C#.NET. My past experience with C# is limited, so I built this small project to prove I can work with and understand the language. 
 
 ## Current Tests
 

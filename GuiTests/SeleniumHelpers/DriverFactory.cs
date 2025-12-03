@@ -29,7 +29,23 @@ namespace Structura.GuiTests.SeleniumHelpers
             }
         }
 
+        /// <summary>
+        /// Create a standard Selenium WebDriver.
+        /// </summary>
         public IWebDriver Create()
+        {
+            return CreateInternal(enableHealing: false);
+        }
+
+        /// <summary>
+        /// Create a self-healing WebDriver with custom locator recovery.
+        /// </summary>
+        public IWebDriver CreateWithHealing()
+        {
+            return CreateInternal(enableHealing: true);
+        }
+
+        private IWebDriver CreateInternal(bool enableHealing)
         {
             IWebDriver driver;
             var driverToUse = ConfigurationHelper.Get<DriverToUse>("DriverToUse");
@@ -49,6 +65,12 @@ namespace Structura.GuiTests.SeleniumHelpers
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            // Apply self-healing wrapper if enabled
+            if (enableHealing)
+            {
+                driver = new SelfHealingDriver(driver);
             }
 
             driver.Manage().Window.Maximize();
