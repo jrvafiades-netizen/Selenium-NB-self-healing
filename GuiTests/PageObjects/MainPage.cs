@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
 using Tests.PageObjects;
 
 namespace Structura.GuiTests.PageObjects
@@ -11,14 +10,11 @@ namespace Structura.GuiTests.PageObjects
         public MainPage(IWebDriver driver)
         {
             _driver = driver;
-            PageFactory.InitElements(_driver, this);
         }
 
-        [FindsBy(How = How.Id, Using = "btnGetAccount")]
-        public IWebElement GetAccountButton { get; set; }
+        public IWebElement GetAccountButton => _driver.FindElement(By.Id("btnGetAccount"));
 
-        [FindsBy(How = How.XPath, Using = "//*[@id=\"_ctl0__ctl0_Content_Main_promo\"]/table/tbody/tr[3]/td/a")]
-        public IWebElement TransferFundsButton { get; set; }
+        public IWebElement TransferFundsButton => _driver.FindElement(By.XPath("//*[@id=\"_ctl0__ctl0_Content_Main_promo\"]/table/tbody/tr[3]/td/a"));
 
         public RequestGoldVisaPage NavigateToTransferFunds()
         {

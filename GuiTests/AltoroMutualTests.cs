@@ -65,7 +65,7 @@ namespace Structura.GuiTests
             {
                 var displayed = new MainPage(_driver).GetAccountButton.Displayed; // throws exception if not found
             };
-            a.ShouldThrow<NoSuchElementException>().WithMessage("Could not find element by: By.Id: btnGetAccount");
+            a.Invoking(x => x()).Should().Throw<NoSuchElementException>();
         }
         
         [Test]

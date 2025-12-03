@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
 using Tests.SeleniumHelpers;
 
 namespace Tests.PageObjects
@@ -12,18 +11,13 @@ namespace Tests.PageObjects
         public LoginPage(IWebDriver driver)
         {
             _driver = driver;
-            PageFactory.InitElements(_driver, this);
         }
 
-        [FindsBy(How = How.Id, Using = "AccountLink")]
-        public IWebElement SignInLink { get; set; }
+        public IWebElement SignInLink => _driver.FindElement(By.Id("AccountLink"));
 
-        [FindsBy(How = How.Id, Using = "uid")]
-        public IWebElement UserIdField { get; set; }
+        public IWebElement UserIdField => _driver.FindElement(By.Id("uid"));
 
-        [FindsBy(How = How.Id, Using = "passw")]
-        public IWebElement PasswordField { get; set; }
-
+        public IWebElement PasswordField => _driver.FindElement(By.Id("passw"));
 
         /// <summary>
         /// JQuery selector example
