@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Text;
 using System.Threading;
 using FluentAssertions;
@@ -8,15 +7,13 @@ using OpenQA.Selenium;
 using Structura.GuiTests.PageObjects;
 using Structura.GuiTests.SeleniumHelpers;
 using Structura.GuiTests.Utilities;
-using Tests.PageObjects;
 
 namespace Structura.GuiTests
 {
     [TestFixture]
-    public class AltoroMutualTests
+    public class NewBalanceTests
     {
         private IWebDriver _driver;
-        private StringBuilder _verificationErrors;
         private string _baseUrl;
 
         [SetUp]
@@ -24,7 +21,6 @@ namespace Structura.GuiTests
         {
             _driver = new DriverFactory().Create();
             _baseUrl = ConfigurationHelper.Get<string>("TargetUrl");
-            _verificationErrors = new StringBuilder();
         }
 
         [TearDown]
@@ -39,54 +35,61 @@ namespace Structura.GuiTests
             {
                 // Ignore errors if we are unable to close the browser
             }
-            _verificationErrors.ToString().Should().BeEmpty("No verification errors are expected.");
         }
 
         [Test]
-        public void LoginWithValidCredentialsShouldSucceed()
+        public void NewBalanceHomepageShouldLoad()
         {
             // Arrange
+            var homepage = new NewBalanceHomepage(_driver);
+
             // Act
-            new LoginPage(_driver).LoginAsAdmin(_baseUrl);
+            homepage.Navigate(_baseUrl);
 
             // Assert
-            new MainPage(_driver).GetAccountButton.Displayed.Should().BeTrue();
+            homepage.IsLoaded().Should().BeTrue("New Balance homepage should load successfully");
         }
 
         [Test]
-        public void LoginWithInvalidCredentialsShouldFail()
+        public void ShouldFindSearchBarOnHomepage()
         {
             // Arrange
+            var homepage = new NewBalanceHomepage(_driver);
+            homepage.Navigate(_baseUrl);
+
             // Act
-            new LoginPage(_driver).LoginAsNobody(_baseUrl);
+            var searchElement = homepage.GetSearchBar();
 
             // Assert
-            Action a = () =>
-            {
-                var displayed = new MainPage(_driver).GetAccountButton.Displayed; // throws exception if not found
-            };
-            a.Invoking(x => x()).Should().Throw<NoSuchElementException>();
+            searchElement.Displayed.Should().BeTrue("Search bar should be visible on the homepage");
         }
-        
+
         [Test]
-        public void RequestGoldenVisaShouldBeAccepted()
+        public void ShouldBeAbleToNavigateToMensShoes()
         {
             // Arrange
-            new LoginPage(_driver).LoginAsAdmin(_baseUrl);
-            var page = new RequestGoldVisaPage(_driver);
-            new MainPage(_driver).NavigateToTransferFunds();
+            var homepage = new NewBalanceHomepage(_driver);
+            homepage.Navigate(_baseUrl);
 
             // Act
-            page.PerformRequest();
+            var mensPage = homepage.NavigateToMens();
 
             // Assert
+            mensPage.IsLoaded().Should().BeTrue("Mens page should load successfully");
+        }
 
-            // Need to wait until the results are displayed on the web page
-            Thread.Sleep(500);
-            
-            page.SuccessMessage.Text.StartsWith(
-                "Your new Altoro Mutual Gold VISA with a $10000 and 7.9% APR will be sent in the mail."
-                , true, CultureInfo.InvariantCulture).Should().BeTrue();
+        [Test]
+        public void ShouldFindProductsOnSite()
+        {
+            // Arrange
+            var homepage = new NewBalanceHomepage(_driver);
+            homepage.Navigate(_baseUrl);
+
+            // Act
+            var productsVisible = homepage.AreProductsVisible();
+
+            // Assert
+            productsVisible.Should().BeTrue("Products should be visible on the New Balance site");
         }
     }
 }
