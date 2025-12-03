@@ -1,4 +1,4 @@
-SeleniumExample - Using Selenium with C#.NET - now updated for 2025 .NET and Selenium/
+SeleniumExample - Using Selenium with C#.NET - now updated for 2025 featuring .NET 10 and Selenium 4
 ===============
 
 This solution demonstrates automated testing web pages with Selenium and C#.NET. It can also be used as a template for new Selenium test projects.
