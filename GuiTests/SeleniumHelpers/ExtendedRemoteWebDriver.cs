@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 
@@ -33,7 +33,10 @@ namespace Structura.GuiTests.SeleniumHelpers
                 {
                     using (var reader = new StreamReader(stream))
                     {
-                        result = JObject.Parse(reader.ReadToEnd()).SelectToken("proxyId").ToString();
+                        var jsonText = reader.ReadToEnd();
+                        var jsonDoc = JsonDocument.Parse(jsonText);
+                        var proxyId = jsonDoc.RootElement.GetProperty("proxyId").GetString();
+                        result = proxyId ?? result;
                     }
                 }
             }

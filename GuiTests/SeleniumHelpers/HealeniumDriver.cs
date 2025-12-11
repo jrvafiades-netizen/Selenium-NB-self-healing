@@ -2,6 +2,7 @@ using OpenQA.Selenium;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System;
 
 namespace Structura.GuiTests.SeleniumHelpers
 {
@@ -58,6 +59,7 @@ namespace Structura.GuiTests.SeleniumHelpers
             }
             catch (NoSuchElementException ex)
             {
+                Console.WriteLine("An unexpected error occurred: " + ex.Message);
                 var healedLocator = AttemptHealing(locator);
                 if (healedLocator != null)
                 {
@@ -79,6 +81,7 @@ namespace Structura.GuiTests.SeleniumHelpers
             }
             catch (NoSuchElementException ex)
             {
+                Console.WriteLine("An unexpected error occurred: " + ex.Message);
                 var healedLocator = AttemptHealing(locator);
                 if (healedLocator != null)
                 {

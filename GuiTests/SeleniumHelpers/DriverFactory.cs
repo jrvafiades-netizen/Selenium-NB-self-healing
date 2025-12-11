@@ -49,6 +49,7 @@ namespace Structura.GuiTests.SeleniumHelpers
         {
             IWebDriver driver;
             var driverToUse = ConfigurationHelper.Get<DriverToUse>("DriverToUse");
+            var headlessMode = ConfigurationHelper.Get<bool>("HeadlessMode");
 
             switch (driverToUse)
             {
@@ -57,11 +58,22 @@ namespace Structura.GuiTests.SeleniumHelpers
                     break;
                 case DriverToUse.Firefox:
                     var firefoxProfile = FirefoxOptions;
+                    if (headlessMode)
+                    {
+                        firefoxProfile.AddArgument("--headless");
+                    }
                     driver = new FirefoxDriver(firefoxProfile);
                     driver.Manage().Window.Maximize();
                     break;
                 case DriverToUse.Chrome:
-                    driver = new ChromeDriver();
+                    var chromeOptions = new ChromeOptions();
+                    if (headlessMode)
+                    {
+                        chromeOptions.AddArgument("--headless");
+                    }
+                    // Don't pass a path - let Selenium Manager handle driver automatically
+                    driver = new ChromeDriver(chromeOptions);
+                    driver.Manage().Window.Maximize();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

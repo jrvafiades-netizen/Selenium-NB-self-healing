@@ -1,6 +1,5 @@
 using System;
-using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 using OpenQA.Selenium;
 using Structura.GuiTests.PageObjects;
 using Structura.GuiTests.SeleniumHelpers;
@@ -8,24 +7,19 @@ using Structura.GuiTests.Utilities;
 
 namespace Structura.GuiTests
 {
-    [TestFixture]
-    public class SelfHealingTests
+    public class SelfHealingTests : IDisposable
     {
         private IWebDriver _driver;
         private string _baseUrl;
 
-        [SetUp]
-        public void SetupTest()
+        public SelfHealingTests()
         {
-            // Uncomment the line below to enable self-healing:
-            // var _driver = new DriverFactory().CreateWithHealing();
-            
             _driver = new DriverFactory().Create();
             _baseUrl = ConfigurationHelper.Get<string>("TargetUrl");
+            Console.WriteLine("Setup: Driver created");
         }
 
-        [TearDown]
-        public void TeardownTest()
+        public void Dispose()
         {
             try
             {
@@ -44,9 +38,10 @@ namespace Structura.GuiTests
             }
         }
 
-        [Test]
+        [Fact]
         public void DemonstrateSelfHealingCapabilities()
         {
+            Console.WriteLine("TEST: DemonstrateSelfHealingCapabilities");
             // This test demonstrates the self-healing capabilities.
             // When using the SelfHealingDriver, if a locator fails to find an element,
             // it will attempt alternative strategies before failing.
@@ -58,14 +53,15 @@ namespace Structura.GuiTests
             homepage.Navigate(_baseUrl);
 
             // Assert
-            homepage.IsLoaded().Should().BeTrue("Homepage should load successfully");
+            Assert.True(homepage.IsLoaded(), "Homepage should load successfully");
             
             // If using self-healing driver, the healing report will be logged
         }
 
-        [Test]
+        [Fact]
         public void SelfHealingDriverCanRecoverFromBrokenLocators()
         {
+            Console.WriteLine("TEST: SelfHealingDriverCanRecoverFromBrokenLocators");
             // This test shows how the self-healing driver can recover
             // from locator changes by trying alternative strategies
 
@@ -78,14 +74,14 @@ namespace Structura.GuiTests
             var searchBar = homepage.GetSearchBar();
 
             // Assert
-            searchBar.Should().NotBeNull("Search bar should be found");
-            searchBar.Displayed.Should().BeTrue("Search bar should be visible");
+            Assert.NotNull(searchBar);
+            Assert.True(searchBar.Displayed, "Search bar should be visible");
 
             // If healing was enabled, show what was healed
             if (isHealingEnabled)
             {
                 var report = HealeniumUtils.GetHealingReport(_driver);
-                report.TotalHealedLocators.Should().BeGreaterThanOrEqualTo(0);
+                Assert.True(report.TotalHealedLocators >= 0);
             }
         }
     }
